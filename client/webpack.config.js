@@ -1,9 +1,9 @@
-const path = require("path");
-const HTMLWebpackPlugin = require("html-webpack-plugin");
-module.exports = {
+import path from "path";
+import HTMLWebpackPlugin from "html-webpack-plugin";
+export default {
   entry: "./src/index.js",
   output: {
-    path: path.join(__dirname, "/dist"),
+    path: path.resolve("/dist"),
     filename: "bundle.js",
   },
   plugins: [
