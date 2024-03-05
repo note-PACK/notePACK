@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import MainContainer from './MainContainer.jsx';
-import './../style.scss';
+
 
 const App = () => {
   return (
-    <div>
+    <div className = 'app'>
       <h1>MainContainer Below</h1>
       <MainContainer/>
     </div>
