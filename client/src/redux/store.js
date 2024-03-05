@@ -3,6 +3,6 @@ import pilesReducer from './pileSlice';
 
 export const store = configureStore({
   reducer: {
-    pilesReducer,
+    piles: pilesReducer,
   },
 });
