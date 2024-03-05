@@ -19,8 +19,6 @@ const Category = ({ name, notes }) => {
 
   return (
     <div className='category'>
-      {/* <h1>{name}</h1> */}
-      {/* <div>{name}</div> */}
       <div>{noteComponents}</div>
     </div>
   );
