@@ -4,7 +4,8 @@ import Workspace from './Workspace.jsx'
 
 const MainContainer = () => {
   return (
-    <div>
+    <div className = 'mContainer'>
+        <h1>Inside Container</h1>
       <Button />
       <Button />
       <Button />
