@@ -5,7 +5,7 @@ const PORT = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static())
+// app.use(express.static())
 
 app.get('/', (req, res) => {
   return res.sendStatus(200);

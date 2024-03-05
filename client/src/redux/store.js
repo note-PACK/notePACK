@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import pilesReducer from './pileSlice';
+import categoriesReducer from './categorySlice.js';
 
 export const store = configureStore({
   reducer: {
-    piles: pilesReducer,
+    categories: categoriesReducer,
   },
 });

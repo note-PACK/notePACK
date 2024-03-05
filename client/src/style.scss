@@ -1,4 +1,6 @@
-body{
+@import 'https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap';
+
+body {
   padding: 0;
   margin: 0;
   background-image: url('./assets/corkBoard.jpg');
@@ -8,11 +10,43 @@ h1 {
   color: red;
 }
 
-.app {
-
+.category {
+  display: flex;
+  flex-direction: column;
+  margin: 50px;
 }
 
+.buttonDiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
 
-.mContainer {
-  background-color: aqua;
+button {
+  background-color: #0000FF;
+  border-radius: 10px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  width: 250px;
+  padding: 5px;
+}
+
+.note {
+  display: flex;
+  font-family: 'kalam';
+  font-weight: bold;
+  font-size: 24px;
+  margin: 50px;
+  padding: 50px;
+}
+
+.workspace {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-top: 25px;
+  margin-bottom: 25px;
 }
