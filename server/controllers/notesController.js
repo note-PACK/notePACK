@@ -18,6 +18,26 @@ notesController.getAllNotes = async (req, res, next) => {
   }
 };
 
+notesController.getAllNotesByUser = async (req, res, next) => {
+  const { user_id } = req.params;
+  try {
+    const allNotes = await pool.query(
+      'SELECT * FROM notes WHERE user_id = $1',
+      [user_id]
+    );
+    res.locals.allNotes = allNotes.rows;
+    return next();
+  } catch (err) {
+    return next({
+      log: `notesController.getAllNotesByUser: ERROR ${err}`,
+      status: 500,
+      message: {
+        err: 'Error occured in notesController.getAllNotesByUser. Check server logs.',
+      },
+    });
+  }
+};
+
 notesController.createNote = async (req, res, next) => {
   const {
     notetitle: title,

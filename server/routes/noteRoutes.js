@@ -6,6 +6,14 @@ noteRouter.get('/', notesController.getAllNotes, (req, res) => {
   return res.status(200).json(res.locals.allNotes);
 });
 
+noteRouter.get(
+  '/user/:user_id',
+  notesController.getAllNotesByUser,
+  (req, res) => {
+    return res.status(200).json(res.locals.allNotes);
+  }
+);
+
 noteRouter.post('/', notesController.createNote, (req, res) => {
   return res.status(201).json(res.locals.newNote);
 });
