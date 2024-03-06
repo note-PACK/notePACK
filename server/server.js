@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('./db');
 const noteRoutes = require('./routes/noteRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 const PORT = 3000;
@@ -10,6 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 //app.use(express.static())
 
 app.use('/notes', noteRoutes);
+app.use('/users', userRoutes);
 
 app.get('/', (req, res) => {
   return res.sendStatus(200);

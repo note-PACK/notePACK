@@ -1,12 +1,12 @@
 const express = require('express');
-const router = express.Router();
+const noteRouter = express.Router();
 const notesController = require('../controllers/notesController');
 
-router.get('/', notesController.getAllNotes, (req, res) => {
+noteRouter.get('/', notesController.getAllNotes, (req, res) => {
   return res.status(200).json(res.locals.allNotes);
 });
 
-router.post('/', notesController.createNote, (req, res) => {
+noteRouter.post('/', notesController.createNote, (req, res) => {
   return res.status(201).json(res.locals.newNote);
 });
 
@@ -16,4 +16,4 @@ router.post('/', notesController.createNote, (req, res) => {
 
 // router.delete('/:id', notesController.deleteTaskById);
 
-module.exports = router;
+module.exports = noteRouter;

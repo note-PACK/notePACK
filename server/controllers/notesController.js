@@ -23,7 +23,12 @@ notesController.getAllNotes = async (req, res, next) => {
 };
 
 notesController.createNote = async (req, res, next) => {
-  const { title, description, category, user_id } = req.body;
+  const {
+    notetitle: title,
+    notedescription: description,
+    category,
+    user_id,
+  } = req.body;
   try {
     const newNoteQuery = `
     INSERT INTO notes (notetitle, notedescription, category, user_id) 
@@ -49,7 +54,35 @@ notesController.createNote = async (req, res, next) => {
   }
 };
 
-notesController.getNoteById = async (req, res, next) => {};
+notesController.getNoteById = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const noteById = await pool.query('SELECT * FROM notes WHERE id = $1', [
+      id,
+    ]);
+
+    if (queryResult.rows.length === 0) {
+      return next({
+        log: `notesControllers.getNoteById: ERROR ${err}`,
+        status: 404,
+        message: {
+          err: 'No notes found.',
+        },
+      });
+    }
+
+    res.locals.noteById = noteById.rows[0];
+    return next();
+  } catch (err) {
+    return next({
+      log: `notesController.getNoteById: ERROR ${err}`,
+      status: 500,
+      message: {
+        err: 'Error occured in notesController.getNoteById. Check server logs.',
+      },
+    });
+  }
+};
 
 notesController.updateNoteById = async (req, res, next) => {};
 
