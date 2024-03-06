@@ -5,12 +5,8 @@ const userController = {};
 
 userController.getAllUsers = async (req, res, next) => {
   try {
-    //console.log('entering get all notes mw');
-    //console.log(pool);
     const allUsers = await pool.query('SELECT * FROM users');
-    console.log(allUsers.rows);
     res.locals.allUsers = allUsers.rows;
-    //res.json(allNotes.rows);
     return next();
   } catch (err) {
     return next({
@@ -103,6 +99,118 @@ userController.verifyUser = async (req, res, next) => {
       status: 500,
       message: {
         err: 'Error occured in userController.verifyUser. Check server logs.',
+      },
+    });
+  }
+};
+
+userController.getUserById = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const userQuery = `
+      SELECT id, username 
+      FROM users 
+      WHERE id = $1`;
+
+    const userById = await pool.query(userQuery, [id]);
+
+    if (userById.rows.length === 0) {
+      return next({
+        log: `userController.getUserById: ERROR ${err}`,
+        status: 404,
+        message: {
+          err: 'No user found with that ID.',
+        },
+      });
+    }
+    res.locals.userById = userById.rows[0];
+    return next();
+  } catch (err) {
+    return next({
+      log: `userController.getUserById: ERROR ${err}`,
+      status: 500,
+      message: {
+        err: 'Error occured in userController.getUserById. Check server logs.',
+      },
+    });
+  }
+};
+
+userController.updateUserById = async (req, res, next) => {
+  const { id } = req.params;
+  const { username, password } = req.body;
+
+  try {
+    let hashedPassword = undefined;
+    if (password) {
+      const saltRounds = 10;
+      hashedPassword = await bcrypt.hash(password, saltRounds);
+    }
+
+    const updateUserQuery = `
+        UPDATE users 
+        SET username = COALESCE($1, username), 
+            password = COALESCE($2, password) 
+        WHERE id = $3 
+        RETURNING id, username;`;
+
+    const updatedUser = await pool.query(updateUserQuery, [
+      username,
+      hashedPassword || null,
+      id,
+    ]);
+
+    if (updatedUser.rows.length === 0) {
+      return next({
+        log: `userController.updateUserById: ERROR ${err}`,
+        status: 404,
+        message: {
+          err: 'No user found with that ID.',
+        },
+      });
+    }
+    res.locals.updatedUser = updatedUser.rows[0];
+    return next();
+  } catch (err) {
+    return next({
+      log: `userController.updateUserById: ERROR ${err}`,
+      status: 500,
+      message: {
+        err: 'Error occured in userController.updateUserById. Check server logs.',
+      },
+    });
+  }
+};
+
+userController.deleteUserById = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const deletedUserQuery = `
+        DELETE FROM users 
+        WHERE id = $1 
+        RETURNING id, username;`;
+
+    const deletedUser = await pool.query(deletedUserQuery, [id]);
+
+    if (deletedUser.rows.length === 0) {
+      return next({
+        log: `userController.deleteUserById: ERROR ${err}`,
+        status: 404,
+        message: {
+          err: 'No user found with that ID.',
+        },
+      });
+    }
+    res.locals.deletedUser = deletedUser.rows[0];
+    return next();
+  } catch (err) {
+    return next({
+      log: `userController.deleteUserById: ERROR ${err}`,
+      status: 500,
+      message: {
+        err: 'Error occured in userController.deleteUserById. Check server logs.',
       },
     });
   }

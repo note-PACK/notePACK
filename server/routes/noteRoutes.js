@@ -10,10 +10,16 @@ noteRouter.post('/', notesController.createNote, (req, res) => {
   return res.status(201).json(res.locals.newNote);
 });
 
-// router.get('/:id', notesController, getNoteById);
+noteRouter.get('/:id', notesController.getNoteById, (req, res) => {
+  return res.status(200).json(res.locals.noteById);
+});
 
-// router.put('/:id', notesController.updateNoteById);
+noteRouter.put('/:id', notesController.updateNoteById, (req, res) => {
+  return res.status(200).json(res.locals.updatedNote);
+});
 
-// router.delete('/:id', notesController.deleteTaskById);
+noteRouter.delete('/:id', notesController.deleteNoteById, (req, res) => {
+  return res.status(200).json(res.locals.deletedNote);
+});
 
 module.exports = noteRouter;
