@@ -10,6 +10,10 @@ userRouter.post('/', userController.createUser, (req, res) => {
   return res.status(201).json(res.locals.newUser);
 });
 
+userRouter.post('/login', userController.verifyUser, (req, res) => {
+  return res.status(201).json(res.locals.user);
+});
+
 userRouter.get(
   '/user/:username',
   userController.getUserByUsername,

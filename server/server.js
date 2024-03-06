@@ -1,11 +1,13 @@
 const express = require('express');
 const pool = require('./db');
+const cors = require('cors');
 const noteRoutes = require('./routes/noteRoutes');
 const userRoutes = require('./routes/userRoutes');
 
 const app = express();
 const PORT = 3000;
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

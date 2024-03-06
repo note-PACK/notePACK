@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 const Workspace = () => {
   const input = useSelector((state) => state.userdataslice.categories);
+  //console.log(input);
   const categories = [];
   for (const category of Object.keys(input)) {
     categories.push(
@@ -11,6 +12,6 @@ const Workspace = () => {
       <Category key={category} name={category} notes={input[category]} />
     );
   }
-  return <div className='workspace'>{categories}</div>;
+  return <div className="workspace">{categories}</div>;
 };
 export default Workspace;

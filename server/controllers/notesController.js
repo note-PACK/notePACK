@@ -25,7 +25,18 @@ notesController.getAllNotesByUser = async (req, res, next) => {
       'SELECT * FROM notes WHERE user_id = $1',
       [user_id]
     );
-    res.locals.allNotes = allNotes.rows;
+    const notesObj = {};
+    const notesArray = allNotes.rows;
+    notesArray.forEach((note) => {
+      // conditional to check if catagory exist on obj
+      if (!notesObj[note.category]) {
+        // if not, create category and assign empty array
+        notesObj[note.category] = [];
+      }
+      // add note object to corresponding category in array on object
+      notesObj[note.category].push(note.notedescription);
+    });
+    res.locals.allNotes = notesObj;
     return next();
   } catch (err) {
     return next({

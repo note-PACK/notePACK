@@ -1,6 +1,7 @@
 const express = require('express');
 const noteRouter = express.Router();
 const notesController = require('../controllers/notesController');
+const userController = require('../controllers/userController');
 
 noteRouter.get('/', notesController.getAllNotes, (req, res) => {
   return res.status(200).json(res.locals.allNotes);

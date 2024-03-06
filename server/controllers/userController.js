@@ -72,7 +72,7 @@ userController.verifyUser = async (req, res, next) => {
 
     if (queryResult.rows.length === 0) {
       return next({
-        log: 'Incorrect username or password in userController.verifyUser.',
+        log: 'Incorrect username or password in userController.verifyUser. #1',
         status: 400,
         message: { err: 'Incorrect username or password.' },
       });
@@ -84,7 +84,7 @@ userController.verifyUser = async (req, res, next) => {
 
     if (!match) {
       return next({
-        log: 'Incorrect username or password in userController.verifyUser.',
+        log: 'Incorrect username or password in userController.verifyUser. #2',
         status: 400,
         message: { err: 'Incorrect username of password.' },
       });
