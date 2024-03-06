@@ -18,6 +18,22 @@ noteRouter.put('/:id', notesController.updateNoteById, (req, res) => {
   return res.status(200).json(res.locals.updatedNote);
 });
 
+// noteRouter.put('/:id', notesController.updateNoteTitleById, (req, res) => {
+//   return res.status(200).json(res.locals.updatedNote);
+// });
+
+// noteRouter.put(
+//   '/:id',
+//   notesController.updateNoteDescriptionById,
+//   (req, res) => {
+//     return res.status(200).json(res.locals.updatedNote);
+//   }
+// );
+
+// noteRouter.put('/:id', notesController.updateNoteCategoryById, (req, res) => {
+//   return res.status(200).json(res.locals.updatedNote);
+// });
+
 noteRouter.delete('/:id', notesController.deleteNoteById, (req, res) => {
   return res.status(200).json(res.locals.deletedNote);
 });

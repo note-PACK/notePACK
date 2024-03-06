@@ -14,7 +14,7 @@ userRouter.get('/:id', userController.getUserById, (req, res) => {
   return res.status(200).json(res.locals.noteById);
 });
 
-userRouter.put('/:id', userController.updateUserById, (req, res) => {
+userRouter.put('/:id', userController.updatePasswordById, (req, res) => {
   return res.status(200).json(res.locals.updatedUser);
 });
 

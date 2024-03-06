@@ -137,47 +137,55 @@ userController.getUserById = async (req, res, next) => {
   }
 };
 
-userController.updateUserById = async (req, res, next) => {
+userController.updatePasswordById = async (req, res, next) => {
   const { id } = req.params;
-  const { username, password } = req.body;
+  const { password } = req.body;
+
+  if (!password) {
+    return next({
+      log: `userController.updatePasswordById: ERROR ${err}`,
+      status: 400,
+      message: {
+        err: 'New password is required.',
+      },
+    });
+  }
 
   try {
-    let hashedPassword = undefined;
-    if (password) {
-      const saltRounds = 10;
-      hashedPassword = await bcrypt.hash(password, saltRounds);
-    }
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    const updateUserQuery = `
+    const updatePasswordQuery = `
         UPDATE users 
-        SET username = COALESCE($1, username), 
-            password = COALESCE($2, password) 
-        WHERE id = $3 
+        SET password = $1
+        WHERE id = $2 
         RETURNING id, username;`;
 
-    const updatedUser = await pool.query(updateUserQuery, [
-      username,
-      hashedPassword || null,
+    const updatedPassword = await pool.query(updatePasswordQuery, [
+      hashedPassword,
       id,
     ]);
 
-    if (updatedUser.rows.length === 0) {
+    if (updatedPassword.rows.length === 0) {
       return next({
-        log: `userController.updateUserById: ERROR ${err}`,
+        log: `userController.updatePasswordById: ERROR ${err}`,
         status: 404,
         message: {
           err: 'No user found with that ID.',
         },
       });
     }
-    res.locals.updatedUser = updatedUser.rows[0];
+    res.locals.updatedPassword = {
+      id: updatedPassword.rows[0].id,
+      username: updatedPassword.rows[0].username,
+    };
     return next();
   } catch (err) {
     return next({
-      log: `userController.updateUserById: ERROR ${err}`,
+      log: `userController.updatePasswordById: ERROR ${err}`,
       status: 500,
       message: {
-        err: 'Error occured in userController.updateUserById. Check server logs.',
+        err: 'Error occured in userController.updatePasswordById. Check server logs.',
       },
     });
   }

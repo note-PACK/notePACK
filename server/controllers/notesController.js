@@ -84,19 +84,48 @@ notesController.updateNoteById = async (req, res, next) => {
   const { id } = req.params;
   const { notetitle: title, notedescription: description, category } = req.body;
 
-  try {
-    const updateQuery = `
-    UPDATE notes 
-    SET notetitle = $1, notedescription = $2, category = $3 
-    WHERE id = $4 
+  const propertiesToUpdate = [];
+  const values = [];
+
+  if (title !== undefined) {
+    propertiesToUpdate.push(`notetitle = $${propertiesToUpdate.length + 1}`);
+    values.push(title);
+  }
+  if (description !== undefined) {
+    propertiesToUpdate.push(
+      `notedescription = $${propertiesToUpdate.length + 1}`
+    );
+    values.push(description);
+  }
+  if (category !== undefined) {
+    propertiesToUpdate.push(`category = $${propertiesToUpdate.length + 1}`);
+    values.push(category);
+  }
+
+  if (propertiesToUpdate.length === 0) {
+    return next({
+      log: `notesControllers.updateNoteById: ERROR ${err}`,
+      status: 404,
+      message: {
+        err: 'No valid updates provided.',
+      },
+    });
+  }
+
+  const updateQuery = `
+    UPDATE notes
+    SET ${propertiesToUpdate.join(', ')}
+    WHERE id = $${propertiesToUpdate.length + 1}
     RETURNING *;`;
 
-    const updatedNote = await pool.query(updateQuery, [
-      title,
-      description,
-      category,
-      id,
-    ]);
+  try {
+    // const updateQuery = `
+    // UPDATE notes
+    // SET notetitle = $1, notedescription = $2, category = $3
+    // WHERE id = $4
+    // RETURNING *;`;
+
+    const updatedNote = await pool.query(updateQuery, [...values, id]);
 
     if (updatedNote.rows.length === 0) {
       return next({
