@@ -137,6 +137,38 @@ userController.getUserById = async (req, res, next) => {
   }
 };
 
+userController.getUserByUsername = async (req, res, next) => {
+  const { username } = req.params;
+  try {
+    const userQuery = `
+      SELECT id, username 
+      FROM users 
+      WHERE username = $1`;
+
+    const userByUsername = await pool.query(userQuery, [username]);
+
+    if (userByUsername.rows.length === 0) {
+      return next({
+        log: `userController.getUserById: ERROR ${err}`,
+        status: 404,
+        message: {
+          err: 'No user found with that ID.',
+        },
+      });
+    }
+    res.locals.userByUsername = userByUsername.rows[0];
+    return next();
+  } catch (err) {
+    return next({
+      log: `userController.getUserByUsername: ERROR ${err}`,
+      status: 500,
+      message: {
+        err: 'Error occured in userController.getUserByUsername. Check server logs.',
+      },
+    });
+  }
+};
+
 userController.updatePasswordById = async (req, res, next) => {
   const { id } = req.params;
   const { password } = req.body;

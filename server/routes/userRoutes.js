@@ -10,8 +10,16 @@ userRouter.post('/', userController.createUser, (req, res) => {
   return res.status(201).json(res.locals.newUser);
 });
 
+userRouter.get(
+  '/user/:username',
+  userController.getUserByUsername,
+  (req, res) => {
+    return res.status(200).json(res.locals.userByUsername);
+  }
+);
+
 userRouter.get('/:id', userController.getUserById, (req, res) => {
-  return res.status(200).json(res.locals.noteById);
+  return res.status(200).json(res.locals.userById);
 });
 
 userRouter.put('/:id', userController.updatePasswordById, (req, res) => {
