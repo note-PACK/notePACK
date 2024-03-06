@@ -1,12 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import MainContainer from './MainContainer.jsx';
-
+import { getCategories } from '../utils/requests.js';
 
 const App = () => {
+  useEffect(() => {
+    getCategories();
+  }, []);
   return (
-    <div className = 'app'>
-      <h1>MainContainer Below</h1>
-      <MainContainer/>
+    <div className='app'>
+      <MainContainer />
     </div>
   );
 };
