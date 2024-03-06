@@ -5,12 +5,8 @@ const userController = {};
 
 userController.getAllUsers = async (req, res, next) => {
   try {
-    //console.log('entering get all notes mw');
-    //console.log(pool);
     const allUsers = await pool.query('SELECT * FROM users');
-    console.log(allUsers.rows);
     res.locals.allUsers = allUsers.rows;
-    //res.json(allNotes.rows);
     return next();
   } catch (err) {
     return next({
@@ -103,6 +99,126 @@ userController.verifyUser = async (req, res, next) => {
       status: 500,
       message: {
         err: 'Error occured in userController.verifyUser. Check server logs.',
+      },
+    });
+  }
+};
+
+userController.getUserById = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const userQuery = `
+      SELECT id, username 
+      FROM users 
+      WHERE id = $1`;
+
+    const userById = await pool.query(userQuery, [id]);
+
+    if (userById.rows.length === 0) {
+      return next({
+        log: `userController.getUserById: ERROR ${err}`,
+        status: 404,
+        message: {
+          err: 'No user found with that ID.',
+        },
+      });
+    }
+    res.locals.userById = userById.rows[0];
+    return next();
+  } catch (err) {
+    return next({
+      log: `userController.getUserById: ERROR ${err}`,
+      status: 500,
+      message: {
+        err: 'Error occured in userController.getUserById. Check server logs.',
+      },
+    });
+  }
+};
+
+userController.updatePasswordById = async (req, res, next) => {
+  const { id } = req.params;
+  const { password } = req.body;
+
+  if (!password) {
+    return next({
+      log: `userController.updatePasswordById: ERROR ${err}`,
+      status: 400,
+      message: {
+        err: 'New password is required.',
+      },
+    });
+  }
+
+  try {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    const updatePasswordQuery = `
+        UPDATE users 
+        SET password = $1
+        WHERE id = $2 
+        RETURNING id, username;`;
+
+    const updatedPassword = await pool.query(updatePasswordQuery, [
+      hashedPassword,
+      id,
+    ]);
+
+    if (updatedPassword.rows.length === 0) {
+      return next({
+        log: `userController.updatePasswordById: ERROR ${err}`,
+        status: 404,
+        message: {
+          err: 'No user found with that ID.',
+        },
+      });
+    }
+    res.locals.updatedPassword = {
+      id: updatedPassword.rows[0].id,
+      username: updatedPassword.rows[0].username,
+    };
+    return next();
+  } catch (err) {
+    return next({
+      log: `userController.updatePasswordById: ERROR ${err}`,
+      status: 500,
+      message: {
+        err: 'Error occured in userController.updatePasswordById. Check server logs.',
+      },
+    });
+  }
+};
+
+userController.deleteUserById = async (req, res, next) => {
+  const { id } = req.params;
+
+  try {
+    const deletedUserQuery = `
+        DELETE FROM users 
+        WHERE id = $1 
+        RETURNING id, username;`;
+
+    const deletedUser = await pool.query(deletedUserQuery, [id]);
+
+    if (deletedUser.rows.length === 0) {
+      return next({
+        log: `userController.deleteUserById: ERROR ${err}`,
+        status: 404,
+        message: {
+          err: 'No user found with that ID.',
+        },
+      });
+    }
+    res.locals.deletedUser = deletedUser.rows[0];
+    return next();
+  } catch (err) {
+    return next({
+      log: `userController.deleteUserById: ERROR ${err}`,
+      status: 500,
+      message: {
+        err: 'Error occured in userController.deleteUserById. Check server logs.',
       },
     });
   }
