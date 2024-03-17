@@ -1,17 +1,24 @@
-body{
+body {
   padding: 0;
   margin: 0;
-  background-image: url('./assets/corkBoard.jpg');
+  background-image: url("./assets/corkBoard.jpg");
 }
 
 h1 {
-  color: red;
+  color: black;
+  background-color: aqua;
+}
+h2 {
+  color: black;
+  background-color: aqua;
+}
+h3 {
+  color: black;
+  background-color: aqua;
 }
 
 .app {
-
 }
-
 
 .mContainer {
   background-color: aqua;
